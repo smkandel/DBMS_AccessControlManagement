@@ -1,0 +1,50 @@
+CREATE TABLE PRIVILEGE (
+    Privilege_Name VARCHAR(255) PRIMARY KEY
+);
+
+CREATE TABLE ACCOUNT_PRIVILEGE (
+    Privilege_Name VARCHAR(255) PRIMARY KEY,
+    FOREIGN KEY (Privilege_Name) REFERENCES PRIVILEGE(Privilege_Name)
+);
+
+CREATE TABLE RELATIONAL_PRIVILEGE (
+    Privilege_Name VARCHAR(255) PRIMARY KEY,
+    FOREIGN KEY (Privilege_Name) REFERENCES PRIVILEGE(Privilege_Name)
+);
+
+CREATE TABLE USER_ROLE (
+    Role_Name VARCHAR(255) PRIMARY KEY,
+    Description TEXT
+);
+
+CREATE TABLE USER_ACCOUNT (
+    Id_No INT PRIMARY KEY,
+    F_Name VARCHAR(255) NOT NULL,
+    Phone VARCHAR(15),
+    Role_Name VARCHAR(255),
+    FOREIGN KEY (Role_Name) REFERENCES USER_ROLE(Role_Name)
+);
+
+CREATE TABLE `TABLE` (
+    Table_Name VARCHAR(255) PRIMARY KEY,
+    Owner_Id INT NOT NULL,
+    FOREIGN KEY (Owner_Id) REFERENCES USER_ACCOUNT(Id_No)
+);
+
+CREATE TABLE ACCOUNT_PRIVILEGE_GRANTED (
+    Privilege_Name VARCHAR(255),
+    Role_Name VARCHAR(255),
+    PRIMARY KEY (Privilege_Name, Role_Name),
+    FOREIGN KEY (Privilege_Name) REFERENCES ACCOUNT_PRIVILEGE(Privilege_Name),
+    FOREIGN KEY (Role_Name) REFERENCES USER_ROLE(Role_Name)
+);
+
+CREATE TABLE ASSIGNED_TABLE_PRIVILEGE (
+    Table_Name VARCHAR(255),
+    Role_Name VARCHAR(255),
+    Privilege_Name VARCHAR(255),
+    PRIMARY KEY (Table_Name, Role_Name, Privilege_Name),
+    FOREIGN KEY (Table_Name) REFERENCES `TABLE`(Table_Name),
+    FOREIGN KEY (Role_Name) REFERENCES USER_ROLE(Role_Name),
+    FOREIGN KEY (Privilege_Name) REFERENCES RELATIONAL_PRIVILEGE(Privilege_Name)
+);
